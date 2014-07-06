@@ -14,7 +14,9 @@ import dstruct.map;
  */
 struct HashSet(T) {
 private:
-    HashMap!(T, void[0]) _map;
+    //HashMap!(T, void[0]) _map;
+    bool[T] _map;
+
 public:
     /**
      * Add an element to this set if needed.
@@ -22,14 +24,14 @@ public:
      * Params:
      *     value = The value to add to the set.
      */
-    @safe pure nothrow
+    @safe nothrow
     void add(ref T value) {
-        _map[value] = (void[0]).init;
+        _map[value] = true;
     }
 
 
     /// ditto
-    @safe pure nothrow
+    @safe nothrow
     void add(T value) {
         add(value);
     }
@@ -45,13 +47,13 @@ public:
      *
      * Returns: true if a value was removed.
      */
-    @nogc @safe pure nothrow
+    @nogc @safe nothrow
     bool remove(ref T value) {
         return _map.remove(value);
     }
 
     /// ditto
-    @nogc @safe pure nothrow
+    @nogc @safe nothrow
     bool remove(T value) {
         return remove(value);
     }
@@ -59,7 +61,7 @@ public:
     /**
      * Returns: The number of elements in this set.
      */
-    @nogc @safe pure nothrow
+    @nogc nothrow
     @property size_t length() const {
         return _map.length;
     }
@@ -67,7 +69,7 @@ public:
     /**
      * Returns: True if this set is empty.
      */
-    @nogc @safe pure nothrow
+    @nogc nothrow
     @property bool empty() const {
         return length == 0;
     }
@@ -83,13 +85,13 @@ public:
      *
      * Returns: true if the value is in the set.
      */
-    @nogc @safe pure nothrow
+    @nogc @safe nothrow
     bool opBinaryRight(string op, T)(ref T value) const if(op == "in") {
         return cast(bool)(value in _map);
     }
 
     /// ditto
-    @nogc @safe pure nothrow
+    @nogc @safe nothrow
     bool opBinaryRight(string op, T)(T value) const if(op == "in") {
         return opBinaryRight!("in", T)(value);
     }
@@ -97,7 +99,7 @@ public:
     /**
      * Returns: True if two sets contain all equal values.
      */
-    @nogc @safe pure nothrow
+    @nogc @safe nothrow
     bool opEquals(U)(const(HashSet!U) otherSet) const
     if (is(U : T) || is(T : U)) {
         static if (is(U : T)) {
@@ -213,7 +215,7 @@ unittest {
  * Returns:
  *     A ForwardRange over all the entries in the set.
  */
-@nogc @safe pure nothrow
+@nogc nothrow
 auto entries(U)(auto ref inout(HashSet!U) set) {
     return set._map.keys();
 }
@@ -221,7 +223,7 @@ auto entries(U)(auto ref inout(HashSet!U) set) {
 /**
  * Returns: A mutable copy of this set.
  */
-@safe pure nothrow
+@safe nothrow
 HashSet!T dup(T)(ref const(HashSet!T) originalSet)
 if(isDupable!T) {
     HashSet!T newSet;
@@ -234,7 +236,7 @@ if(isDupable!T) {
 }
 
 /// ditto
-@safe pure nothrow
+@safe nothrow
 HashSet!T dup(T)(const(HashSet!T) originalSet)
 if(isDupable!T) {
     return originalSet.dup();
