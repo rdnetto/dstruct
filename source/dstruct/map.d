@@ -174,13 +174,18 @@ struct HashMap(K, V) {
         size_t bucketIndex = hashIndex(hash, bucket.length);
 
         if (auto entry = bucket[bucketIndex]) {
+            auto lastEntry = entry;
+
             do {
                 if (entry.key == key) {
                     // We found a key match, so update the value and return.
                     entry.value = value;
                     return;
                 }
-            } while (entry.next !is null);
+
+                lastEntry = entry;
+            } while ((entry = entry.next) !is null);
+            entry = lastEntry;
 
             if (++_length <= bucket.length) {
                 // We can add on another without needing a resize.
