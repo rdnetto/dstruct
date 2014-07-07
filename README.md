@@ -3,6 +3,10 @@
 This library offers a variety of data structures and operations on those
 data structures in D.
 
+### Note
+This is a fork of the original library by w0rp intended for use with dqt.
+Once w0rp's repository is stable (i.e. no failed assertions or unit tests), it should no longer be used.
+
 ## Quick Start
 
 Check out the code somewhere and you can use it as a DUB package. Everything
